@@ -1,0 +1,99 @@
+# Projeto 1 — PTE Master Hub: plataforma unificada de preparo PTE (planejamento consolidado dos projetos 1–9)
+
+> ⚠️⚠️⚠️ OBSERVAÇÃO IMPORTANTE (herdada do projeto 1 original) ⚠️⚠️⚠️
+> NÃO TESTE NEM USE O OPENCODE PARA ESSA TAREFA (mas rode ele normalmente em background), pois ela exige o
+> máximo potencial agêntico — apenas deixe-o rodando em background para edições futuras após a conclusão completa.
+
+## Origem e estado de partida
+Este trio (`project1` · `prd-project1.md` · `roadmap-proj1`) **consolida** os antigos `project1…project9`, seus
+PRDs e roadmaps numa numeração única: **Fases 1–14**, mapeadas em `prd-project1.md` §0.2. O que era "projeto N" virou
+fase(s); decisões, gates e vereditos de fonte foram preservados. O próximo planejamento nasce em `project2`.
+- **Estado:** app completo e verificado (22 task types, SRS global, plano, simulado, pack de estudo, storage v6,
+  acessibilidade). Única pendência: **Fase 14.2** — verificação offline em build de produção (ver fim do arquivo).
+
+## Missão
+Transformar o ReadAloud Trainer (um tipo, 148 questões) numa **plataforma única e inteligente de preparo para o PTE
+Academic**: todos os task types de Speaking, Writing, Reading e Listening, com treino fiel ao exame, agenda de revisão,
+diagnóstico, meta e plano de estudo, simulado, e medição **honesta** — sem auth, sem nuvem, 100% local e offline-first.
+
+## Problemas que o conjunto resolve (o QUÊ e o POR QUÊ)
+**A. Cobertura da prova** — o banco migrou de 1 tipo para 16 e depois 22 (a prova tem 22 desde 07/08/2025).
+1. O app só entendia Read Aloud → motores por família (voz, escrita/ditado, áudio interativo, leitura) e catálogo unificado.
+2. Faltavam tipos (Write Essay, Re-order, Reading FIB, SGD, RTS, Describe Image) e havia bancos rasos (3–6 itens) → expansão
+   **só com fonte verificável**, sem login, com gabarito e sem IA, com dedupe obrigatório; sem fonte, o tipo fica "em breve" com motivo.
+3. Números fixos na UI/SEO envelheciam a cada expansão (ex.: "2.164" ao lado de 2.536) → tudo derivado do manifesto + teste de prevenção.
+
+**B. Treino que guia o aluno** — treinar por tipo não diz O QUÊ revisar, QUANDO nem POR QUÊ.
+1. A agenda de revisão só era visível em `/session` (a prática já a alimentava, mas sem badge nem fila), a sessão se perdia no reload e não
+   havia histórico → persistência, agenda visível em toda a app, "Fila do dia".
+2. `ERROR_SCORE` era corte único, sem categorias de erro → diagnóstico por tag (conteúdo, fluência, omissão, trap, palavras mais erradas).
+3. Sem meta, sem plano, sem "estou pronto?" → data da prova + alvo, plano diário por habilidade, prontidão, relatório semanal.
+4. Sem simulado → exame cronometrado reutilizando os motores; depois, blueprint oficial (~2 h) × mini-simulado rotulados.
+
+**C. Medição que não mente** — números que o aluno lê precisam significar o que parecem.
+1. Escalas misturadas (média em % comparada ao alvo 10–90) → **estimativa de treino 10–90**, rotulada e com nível de confiança.
+2. Prontidão media o tamanho do banco (40% cobertura; Listening nunca sobe) → desempenho recente ponderado + tendência + confiança.
+3. Pesos 30/30/20/20 sem fonte, modelo "1 tarefa → 1 seção" → pesos derivados da **matriz oficial** tarefa×habilidade da Pearson.
+4. Score de fala ignorava extras/repetições; pronúncia não é medível → penalizar o que sobra, **"pronúncia não avaliada"**,
+   fluência como proxy rotulado; detector local de resposta-template (aviso, nunca nota); texto honesto sobre o serviço de voz do navegador.
+5. SRS inflável (5 acertos em 5 min → revisão em 30 dias) → caixa só promove quando vencida; lapso rebaixa 1; limiar por tipo.
+
+**D. Progresso que nunca se perde** — o único erro que o aluno não percebe sozinho.
+1. O teto do log de tentativas apagava o SRS → snapshot por questão independente do log truncável.
+2. Estado ilegível/de versão futura era sobrescrito; import substituía tudo sem prévia → quarentena, somente-leitura, prévia + mesclar + desfazer.
+3. Gravação sem aviso preventivo de quota/persistência/backup; datas em passos de 24 h (horário de verão) → coalescer, avisar, chaves de dia local.
+4. Itens de IA/seed invisíveis e quase-duplicatas dividindo estatística → selo de proveniência, filtro "só verificadas", `canonicalId`.
+
+**E. Offline, desempenho e acessibilidade** — PWA de fachada, payload inflado, a11y não auditada.
+1. Offline só do já visitado → pré-cache + "Baixar para offline", cache versionado e aviso de nova versão.
+2. WFD repetia a mesma frase em 4 campos (~51% dos bytes) → payload enxuto; TTS sem informar a voz usada → exibir a voz real.
+3. Sem auditoria de acessibilidade → axe limpo, teclado completo nos motores, revisão 390×844.
+
+**F. Pack "studie-plus" (extra de estudo, fora da replicação exata do PTE)**
+1. Ajudar o aluno a entender e pronunciar: **tradução por palavra** (literal + contextual breve), **tradução por frase** (literal + não
+   literal), **áudio de pronúncia** — ativáveis/desativáveis em Ajustes, **desligado por padrão**, em arquivos separados do banco.
+2. Regras invioláveis: tradução = significado (texto), áudio = pronúncia do **inglês original** (nunca "áudio da tradução"); um não depende do
+   outro; não confundir áudio/tradução do pack com os nativos das questões; nada abre durante a rolagem no mobile (só tap explícito).
+3. Mobile-first: adaptar cada tipo de questão/página ao uso (ou não) dos recursos do pack. Geração dos dados: subagentes em lotes, **sem AI Gateway**.
+
+## Direção
+Fechar o ciclo do aluno: **cobrir a prova → guiar o treino → medir com honestidade → nunca perder o progresso → funcionar offline e para todos.**
+Prioridade permanente: não perder nem distorcer o que o aluno já tem > medir com honestidade > alinhar à prova real > entrega rápida.
+
+## Ordem lógica (fases consolidadas — dependência crescente)
+| # | Fase | Depende de |
+|---|---|---|
+| 1 | Base de dados e catálogo unificado | — |
+| 2 | Motores de prática A–D (16 tipos) | 1 |
+| 3 | Hub, sessões persistentes e SRS em toda a app | 2 |
+| 4 | Diagnóstico de erros, notas e atalhos | 3 |
+| 5 | Simulado v1, PWA offline v2 e gráficos de evolução | 3–4 |
+| 6 | Meta, prontidão v1, plano do dia e relatório semanal | 3–4 |
+| 7 | Expansão confiável do banco e novos tipos (19) — gate de fonte + dedupe | 2, 5 |
+| 8 | Consistência de métricas e SEO dinâmico (+ teste de prevenção) | 7 |
+| 9 | Pack studie-plus: tradução, áudio, mobile-first, glossário | 2, 8 |
+| 10 | Integridade do progresso (storage v6) e SRS correto — antes de tudo que mexe em dados do aluno | 3, 6 |
+| 11 | Medição honesta, escala 10–90 e prontidão v2 | 10 |
+| 12 | Banco rastreável (proveniência, duplicatas, payload) e tipos 22/22 — duplicatas migram `qid` | 10, 11 |
+| 13 | Offline real e simulado fiel — depois do payload final | 11, 12 |
+| 14 | Acessibilidade, mobile e fechamento (+ verificação offline pendente) | 13 |
+
+## Restrições permanentes
+- Sem auth, sem multiusuário, sem nuvem; 100% localStorage; backup JSON versionado como envelope (migração sem perda).
+- TTS/STT pela Web Speech API; zero dependências de runtime novas; sem números fixos onde exista constante do manifesto.
+- Gates por fase: vitest + tsgo + build + lint + preview :8080 (Playwright nas rotas tocadas); offline só em build de produção.
+- Não editar `routeTree.gen.ts`; pack desligado por padrão; áudio fala sempre o inglês original.
+
+## Governança de dados (regras invioláveis)
+1. Só entra conteúdo de fonte verificável, sem login, com respostas/transcrições presentes e probabilidade **muito alta** de ser real
+   (varredura online + métodos adaptativos de verificação); nada gerado por IA nem "de memória".
+2. Zero duplicatas: contra o banco existente **e** entre fontes novas; itens de listening só entram se o motor usa o transcript.
+3. Describe Image só com imagens acessíveis e licença clara; sem fonte aprovada, o tipo registra o motivo — nunca conteúdo duvidoso.
+
+## Escopo negativo
+Sem correção por IA/LLM; sem prometer nota oficial do PTE; sem apagar questões sem registro; sem contas, nuvem ou pagamento;
+sem reativar o AI Gateway; sem lematização no glossário.
+
+## Pendência e próximo passo
+- **Fase 14.2:** provar offline em build de produção — tipo nunca visitado após "Baixar para offline", motores novos
+  (write_essay, reorder, read_fib, SGD, RTS, DI) e aviso de nova versão do SW. Concluída: avisar o monitor e planejar `project2`.
