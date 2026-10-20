@@ -1,0 +1,48 @@
+# Roadmap — projeto 1 (consolidado): PTE Master Hub — plataforma unificada de preparo PTE
+Fonte: `.opencode/prd-project1.md` (← `.opencode/project1`). Fases 1–14 = numeração única (mapa antigo→novo em PRD §0.2). Ordem = dependência, sem prazos. Gates por fase: vitest verde · tsgo limpo · build OK · lint 0 erros (8 warnings pré-existentes) · preview :8080 (Playwright nas rotas tocadas).
+Regras: 100% localStorage; zero deps de runtime; números derivados do manifesto; pack off por padrão e áudio = inglês original; offline só em build de produção.
+- [x] Fase 1 — Base de dados e catálogo unificado (p1·F0–F1)
+  - [x] 1.1 16 JSONs em `.opencode/pte-json/` · [x] 1.2 catálogo tipado (`src/lib/pte/`) · [x] 1.3 storage v2 + backup · [x] 1.4 Home por seção + rotas `/speaking|writing|reading|listening`
+  - Gates: vitest 31/31 · tsgo · build · lint 0 · preview (home, 4 seções, `/practice`)
+- [x] Fase 2 — Motores de prática A–D, 16 tipos (p1·F2–F5)
+  - [x] 2.1 WFD · FIB · HIW · [x] 2.2 SWT · SST · [x] 2.3 RA · RS · RL · ASQ · [x] 2.4 MCQs Reading/Listening + HCS/Summary/SMW (dado `lst_smw` corrigido)
+  - Gates: vitest 42 → 52 → 66 → 75/75 (por motor) · tsgo · lint 0 · build · preview por tipo (todos com motor, nenhum "Em breve")
+- [x] Fase 3 — Hub, sessões persistentes e SRS em toda a app (p1·F6 · p2·F1–F2)
+  - [x] 3.1 sessão mista, filtros, paginação 50 · [x] 3.2 draft + histórico (AppState v3) · [x] 3.3 SRS global: modo `"due"`, chip/badges, "Fila do dia (N)"
+  - Gates: vitest 75 → 108/108 · tsgo · build · preview home/seções/`/session` (retomada após reload, histórico das 10 últimas)
+- [x] Fase 4 — Diagnóstico de erros, notas e atalhos (p2·F3–F4)
+  - [x] 4.1 `Attempt.tags` + `diagnostics.ts` + "Padrões de erro" · [x] 4.2 notas (tecla N, debounce 400 ms) + atalhos ←/→ B N ? (bug de hidratação SSR corrigido)
+  - Gates: vitest 125/125 · tsgo · build · preview notas + atalhos verificados (Playwright)
+- [x] Fase 5 — Simulado v1, PWA offline v2 e gráficos de evolução (p2·F5–F6)
+  - [x] 5.1 `exam.ts` + `/exam` (ExamRunner, auto-submit) · [x] 5.2 `sw.js` v2 · [x] 5.3 `/progress`: 7 d × 7 d + evolução semanal por tipo
+  - Gates: testes `exam` · fluxo `/exam` no preview · offline E2E (wrangler :4173, SW ativo, 41 entradas, Home e `/progress` do cache, 0 erros) · vitest 125/125
+- [x] Fase 6 — Meta, prontidão v1, plano do dia e relatório semanal (p3·F1–F4)
+  - [x] 6.1 settings v4 (`examDate`, `targetScore`) + countdown · [x] 6.2 prontidão v1 · [x] 6.3 plano do dia + "Iniciar plano" · [x] 6.4 relatório (copiar/baixar .md/.json)
+  - Gates: vitest 147 → 171/171 · tsgo · build · lint 0 · preview `/progress` (clipboard + downloads) · pesos e prontidão v1 superados na Fase 11
+- [x] Fase 7 — Expansão confiável do banco e novos tipos, 19 tipos (p3·F0+F5 · p4·F0–F4)
+  - [x] 7.1 gate de fonte + dedupe · [x] 7.2 `write_essay` 38 · `reorder_paragraphs` 50 · `read_fib` 50 (motores + exame) · [x] 7.3 expansão P0–P2 (2.164 → 2.536) · [x] 7.4 contagem final por tipo/fonte
+  - Gates: vitest 181/181 · tsgo · build · lint 0 · `bank-integrity` verde · manifesto 2.536 / 19 tipos · prática dos tipos tocados sem erro de console · Describe Image bloqueado (resolvido na 12.2)
+- [x] Fase 8 — Consistência de métricas e SEO dinâmico (p5·F1–F4)
+  - [x] 8.1 Home/Listening/root/progress derivados do manifesto · [x] 8.2 `metrics-sync.test.ts` · [x] 8.3 offline E2E (Home, `/listening`, `/practice` WFD) · [x] 8.4 fechamento
+  - Gates: vitest 195/195 (181 + 14) · tsgo · build · lint 0 · Playwright (2.536 em cabeçalho/cards/rodapé, Listening 1.168, console limpo)
+- [x] Fase 9 — Pack studie-plus: tradução, áudio de pronúncia, mobile-first e glossário (p6·F0–F5 · p7·F0–F5 · p8·F0–F4)
+  - [x] 9.1 settings v5 · [x] 9.2 palavra · [x] 9.3 frase (3.933/3.933) · [x] 9.4 áudio = inglês original, zero pt-BR, independente dos toggles · [x] 9.5 mobile-first 390×844 · [x] 9.6 glossário via subagentes (5.776/6.000 = 96,3%) · [x] 9.7 docs
+  - Gates: vitest 201 → 241 → 248 → 258/258 (27 arquivos) · tsgo · build · lint 0 · Playwright mobile (balão real "complex → complexo", sem overflow, console limpo) · zero chamadas ao AI Gateway
+- [x] Fase 10 — Integridade do progresso (storage v6) e SRS correto (p9·F0–F2)
+  - [x] 10.1 fontes oficiais Pearson (22 tipos, matriz) · [x] 10.2 snapshot SRS, quarentena, import prévia/mesclar/undo, coalescência, quota, datas locais · [x] 10.3 SRS v2 (promoção só vencida, lapso −1, `PASS_SCORE` por tipo)
+  - Gates: vitest 266 → 285/285 (+8 `storage-v6`, +23 `srs-v2`) · probes A1/A2/B5 verdes · round-trip v5→v6 sem perda · Playwright export → prévia → mesclar → undo, console limpo
+- [x] Fase 11 — Medição honesta, escala 10–90 e prontidão v2 (p9·F3–F4)
+  - [x] 11.1 extras/repetições no score · subscores (pronúncia "não avaliada") · detector de template · textos honestos · [x] 11.2 `skillMatrix` (pesos 20/40/27/13) · `estimate` 10–90 · prontidão v2 com confiança
+  - Gates: vitest 299 → 324/324 · tsgo · build · lint 0 · Playwright 390×844 (subscores, "confiança baixa", nenhuma tela mistura % com 10–90), console limpo
+- [x] Fase 12 — Banco rastreável e tipos 22/22 (p9·F5 · F7)
+  - [x] 12.1 selos de proveniência · filtro "só verificadas" (off) · dedupe `canonicalId` (28 pares SWT) · payload WFD slim · [x] 12.2 SGD 13 · RTS 63 · Describe Image 6 (OWID CC BY 4.0) + motores
+  - Gates: vitest 338 → 341/341 · payload 3.583 KB → 1.612 KB (−55%) · zero quase-duplicatas · progresso fundido sem perda · catálogo 22/22 · Playwright selos/toggle, console limpo
+- [x] Fase 13 — Offline real e simulado fiel (p9·F6 · F8) — um gate migrou para 14.2
+  - [x] 13.1 pré-cache, "Baixar para offline", cache versionado, aviso de nova versão, webmanifest derivado · [x] 13.2 BLUEPRINT oficial (59 q, ~2 h 01) × mini-simulado, resultado por habilidade
+  - Gates: vitest 343/343 · tsgo · build · lint 0 · Playwright E2E do simulado Reading (7/7 + auto-submit por cronômetro), console limpo
+- [ ] Fase 14 — Acessibilidade, mobile e fechamento (p9·F9 + pendência) — **primeira fase não concluída: executar 14.2**
+  - [x] 14.1 axe 0 violações nas 10 rotas · teclado nos motores · voz TTS exibida (`TtsVoiceNote`) · 9 rotas 390×844 sem overflow · Gates 14.1: vitest 343/343 · tsgo · build · lint 0
+  - [ ] 14.2 build de produção (`wrangler dev` :4173, SW ativo) + Playwright `context.set_offline`: (a) tipo **nunca visitado** após "Baixar para offline"; (b) motores novos offline (write_essay, reorder_paragraphs, read_fib, SGD, RTS, DI); (c) bump de `VERSION` → aviso "Nova versão — Recarregar"
+  - [ ] Fechamento: gates globais · `AGENTS.md` (estado atual) conferido/atualizado · monitor avisado "remix finalizado (+N da etapa do roadmap que foi efetuada)" · usuário informado (sem `ask`)
+  - [ ] Tudo concluído → planejar as próximas melhorias em novo `project2` · ativar o opencode · informar o monitor
+  - Gates 14.2: (a)–(c) sem falhas e console 0 erros, screenshots em `/tmp/browser/` · vitest/tsgo/build/lint mantidos
