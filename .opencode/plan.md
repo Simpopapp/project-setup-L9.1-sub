@@ -9,7 +9,7 @@ O trabalho agentico de remix é guiado por 3 arquivos (N = 1 neste projeto; com 
 | `roadmap-proj{N}` | Roadmap: fases em ordem de dependência, checkboxes e gates. Registro de progresso. |
 
 ### O que fazer, conforme o que existe (a ordem de criação dos arquivos não importa, mas todos devem existir e serem preenchidos e seguidos conforme as necessidades do projeto)
-- **Os 3 existem:** execute o roadmap, a partir da primeira fase não concluída.
+- **Os 3 existem:** execute o roadmap, a partir da primeira fase não concluída. (se nenhuma fase do roadmap tiver sido concluida, verificar melhorias possiveis na ideia geral do projeto e da composição dos 3 arquivos apliar e melhorar em todos os aspectos os resultados esperados pra cada pagina/recurso/feature ou aspecto visual de cada um desses elementos, antes de iniciar a construção)
 - **2 existem:** crie o que falta e depois execute.
 - **1 existe:** crie os outros 2 (ordem: planejamento → PRD → roadmap) e depois execute.
 - **Nenhum existe:** informe o project-monitor e em seguida o usuário (a proxima mensagem do usuário deve ser imediatamente colada em project{N} substituindo o "null")
